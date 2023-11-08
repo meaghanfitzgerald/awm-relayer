@@ -21,4 +21,4 @@ commit_hash="${full_commit_hash::8}"
 echo "Building Docker Image with tags: $relayer_dockerhub_repo:$commit_hash , $relayer_dockerhub_repo:$current_branch"
 docker build -t "$relayer_dockerhub_repo:$commit_hash" \
         -t "$relayer_dockerhub_repo:$current_branch" \
-        "$RELAYER_PATH" -f "$RELAYER_PATH/Dockerfile"
+        "$RELAYER_PATH" -f "$RELAYER_PATH/Dockerfile" $*
