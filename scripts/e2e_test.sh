@@ -55,6 +55,7 @@ RELAYER_PATH=$(
 )
 
 source "$RELAYER_PATH"/scripts/constants.sh
+source "$RELAYER_PATH"/scripts/constants_go.sh
 
 source "$RELAYER_PATH"/scripts/versions.sh
 

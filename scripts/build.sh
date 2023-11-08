@@ -38,6 +38,7 @@ RELAYER_PATH=$(
 # Load the versions and constants
 source "$RELAYER_PATH"/scripts/versions.sh
 source "$RELAYER_PATH"/scripts/constants.sh
+source "$RELAYER_PATH"/scripts/constants_go.sh
 
 if [[ $# -eq 1 ]]; then
     binary_path=$1

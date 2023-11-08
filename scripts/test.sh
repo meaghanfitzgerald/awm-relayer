@@ -12,5 +12,6 @@ RELAYER_PATH=$(
     cd .. && pwd
 )
 source "$RELAYER_PATH"/scripts/constants.sh
+source "$RELAYER_PATH"/scripts/constants_go.sh
 
 go test ./...
