@@ -29,6 +29,7 @@ RUN golangci-lint run --path-prefix=. --timeout 3m
 
 FROM e2e_test_env AS test_e2e
 ENV DATA_DIR=/tmp/e2e-test/data
+RUN mkdir -p $DATA_DIR && ls $DATA_DIR
 RUN ./scripts/e2e_test.sh
 
 ### RUN Stage ###
