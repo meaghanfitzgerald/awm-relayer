@@ -19,6 +19,6 @@ relayer_path="$RELAYER_PATH/build/awm-relayer"
 relayer_dockerhub_repo=${DOCKER_REPO:-"awm-relayer"}
 
 # Current branch
-current_branch=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match || true)
+current_branch=$((git symbolic-ref -q --short HEAD || git describe --tags --exact-match) | tr '/' '_' || true)
 
 git_commit=${RELAYER_COMMIT:-$( git rev-list -1 HEAD )}
