@@ -93,7 +93,8 @@ func BasicRelay(network interfaces.LocalNetwork) {
 	log.Info("Test Relaying from Subnet A to Subnet B")
 
 	log.Info("Starting the relayer")
-	relayerCmd, relayerCancel := testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	relayerCleanup := testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	defer relayerCleanup()
 
 	// Sleep for some time to make sure relayer has started up and subscribed.
 	log.Info("Waiting for the relayer to start up")
@@ -122,8 +123,7 @@ func BasicRelay(network interfaces.LocalNetwork) {
 
 	log.Info("Finished sending warp message, closing down output channel")
 	// Cancel the command and stop the relayer
-	relayerCancel()
-	_ = relayerCmd.Wait()
+	relayerCleanup()
 
 	//
 	// Try Relaying Already Delivered Message
@@ -152,15 +152,15 @@ func BasicRelay(network interfaces.LocalNetwork) {
 
 	// Run the relayer
 	log.Info("Creating new relayer instance to test already delivered message")
-	relayerCmd, relayerCancel = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	relayerCleanup = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	defer relayerCleanup()
 
 	// We should not receive a new block on subnet B, since the relayer should have seen the Teleporter message was already delivered
 	log.Info("Waiting for 10s to ensure no new block confirmations on destination chain")
 	Consistently(newHeadsB, 10*time.Second, 500*time.Millisecond).ShouldNot(Receive())
 
 	// Cancel the command and stop the relayer
-	relayerCancel()
-	_ = relayerCmd.Wait()
+	relayerCleanup()
 
 	//
 	// Set StartBlockHeight in config
@@ -187,7 +187,7 @@ func BasicRelay(network interfaces.LocalNetwork) {
 	relayerConfigPath = writeRelayerConfig(modifiedRelayerConfig)
 
 	log.Info("Starting the relayer")
-	relayerCmd, relayerCancel = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	relayerCancel = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
 	log.Info("Waiting for a new block confirmation on subnet B")
 	<-newHeadsB
 	delivered1, err := subnetBInfo.TeleporterMessenger.MessageReceived(
@@ -205,10 +205,6 @@ func BasicRelay(network interfaces.LocalNetwork) {
 	Expect(delivered1).Should(BeFalse())
 	Expect(delivered2).Should(BeFalse())
 	Expect(delivered3).Should(BeTrue())
-
-	// Cancel the command and stop the relayer
-	relayerCancel()
-	_ = relayerCmd.Wait()
 }
 
 func sendBasicTeleporterMessage(
