@@ -187,7 +187,9 @@ func BasicRelay(network interfaces.LocalNetwork) {
 	relayerConfigPath = writeRelayerConfig(modifiedRelayerConfig)
 
 	log.Info("Starting the relayer")
-	relayerCancel = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	relayerCleanup = testUtils.RunRelayerExecutable(ctx, relayerConfigPath)
+	defer relayerCleanup()
+
 	log.Info("Waiting for a new block confirmation on subnet B")
 	<-newHeadsB
 	delivered1, err := subnetBInfo.TeleporterMessenger.MessageReceived(
