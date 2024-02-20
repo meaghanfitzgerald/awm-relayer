@@ -7,3 +7,6 @@ __debug_bin
 main.log
 server.log
 *.test
+
+# Relayer config contains private key
+academy/relayer-config.json
